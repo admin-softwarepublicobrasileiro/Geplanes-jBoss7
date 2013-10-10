@@ -14,7 +14,9 @@ No manual de instalação/atualização é descrito em maiores detalhes a instal
 
 * O arquivo <b>jboss7+geplanes3.0.3.tar</b> já vem com o jboss configurado e com o geplanes junto.
 
-## 2.1 - Editar o arquivo <i>applicationConfig.xml</i> em (<i>path/jboss-7.1.1.Final/standalone/deployments/geplanes_bsc.war/WEB-INF</i>)
+## 2.1 - Editar o arquivo applicationConfig.xml
+
+Editar o arquivo <i>applicationConfig.xml</i> em (<i>path/jboss-7.1.1.Final/standalone/deployments/geplanes_bsc.war/WEB-INF</i>)
 
 Adicione o seguinte trecho logo após o bean <i>"authenticationConfig"</i>:
 
@@ -22,7 +24,9 @@ Adicione o seguinte trecho logo após o bean <i>"authenticationConfig"</i>:
         class="br.com.linkcom.sgm.util.JndiGeplanesFactory">
     </bean>
 
-## 2.2 - Editar o arquivo <i>standalone.xml</i> em (<i>path/jboss-7.1.1.Final/standalone/configuration</i>)
+## 2.2 - Editar o arquivo standalone.xml
+
+Editar o arquivo <i>standalone.xml</i> em (<i>path/jboss-7.1.1.Final/standalone/configuration</i>)
 
 Adicione os trechos dentro da tag <i><datasources></i>. Essa configuração substitui a configuração do banco de dados definida no arquivo <i>geplanes_bsc_geplanes-ds.xml</i> utilizada para a versÃ£o 4.5 do JBoss.
 
@@ -135,10 +139,15 @@ No exemplo abaixo o ip do servidor do banco de dados é o 10.0.1.6.
         </drivers>
   </datasources>
 
-## 2.3 - Criar o arquivo <b>geplanes_bsc.war.dodeploy</b> no caminho <i>path/jboss-7.1.1.Final/standalone/deployments</i> com o seguinte conteúdo:
+## 2.3 - Criar o arquivo geplanes_bsc.war.dodeploy
+
+Criar o arquivo <b>geplanes_bsc.war.dodeploy</b> no caminho <i>path/jboss-7.1.1.Final/standalone/deployments</i> com o seguinte conteúdo:
+   
     geplanes_bsc.war
 
-## 2.4 - Copiar o driver do postgresql (<i>postgresql-9.2-1002.jdbc4.jar</i>) dentro da pasta <i>path/jboss-7.1.1.Final/modules/org/postgresql/main</i>
+## 2.4 - Copiar o driver do postgresql postgresql-9.2-1002.jdbc4.jar
+
+Copiar o driver do postgresql (<i>postgresql-9.2-1002.jdbc4.jar</i>) dentro da pasta <i>path/jboss-7.1.1.Final/modules/org/postgresql/main</i>
 
 ## 2.5 - Criar um script para facilitar a inicialização do jBoss.
 
