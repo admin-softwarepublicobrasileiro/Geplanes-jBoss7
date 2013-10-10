@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Manual de Instalação do Geplanes - jBoss7 by admin-softwarepublicobrasileiro</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Manual de Instalação do Geplanes - jBoss7</h1>
+        <p></p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/admin-softwarepublicobrasileiro/Geplanes-jBoss7" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/admin-softwarepublicobrasileiro/Geplanes-jBoss7/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/admin-softwarepublicobrasileiro/Geplanes-jBoss7/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h2>
+<a name="1---tutorial-para-usar-o-geplanes-no-jboss-711" class="anchor" href="#1---tutorial-para-usar-o-geplanes-no-jboss-711"><span class="octicon octicon-link"></span></a>1 - Tutorial para usar o geplanes no JBoss 7.1.1</h2>
+
+<p>No manual de instalação/atualização é descrito em maiores detalhes a instalação e configuração do geplanes:</p>
+
+<p><a href="http://www.softwarepublico.gov.br/dotlrn/clubs/geplanes/file-storage/view/metodologia-bsc/vers-es/geplanes-3-0-3/Manual_de_Atualiza%C3%A7%C3%A3o_para_a_Vers%C3%A3o_3.0.3.pdf">http://www.softwarepublico.gov.br/dotlrn/clubs/geplanes/file-storage/view/metodologia-bsc/vers-es/geplanes-3-0-3/Manual_de_Atualiza%C3%A7%C3%A3o_para_a_Vers%C3%A3o_3.0.3.pdf</a></p>
+
+<h2>
+<a name="2---aqui-mostraremos-apenas-o-que-configurar-no-jboss-7-para-que-o-geplanes-funcione-adequadamente" class="anchor" href="#2---aqui-mostraremos-apenas-o-que-configurar-no-jboss-7-para-que-o-geplanes-funcione-adequadamente"><span class="octicon octicon-link"></span></a>2 - Aqui mostraremos apenas o que configurar no JBoss 7 para que o geplanes funcione adequadamente</h2>
+
+<p><b>Observações:</b></p>
+
+<ul>
+<li><p>O arquivo build <b>geplanes_bsc.war</b> é o mesmo, apenas serão alterados alguns arquivos de configuração do próprio JBoss.</p></li>
+<li><p>Não é necessário alterar a configuração de memória de inicialização do jboss uma vez que por padrão ele já incializa com 2GB de ram.</p></li>
+<li><p>O arquivo <b>jboss7+geplanes3.0.3.tar</b> já vem com o jboss configurado e com o geplanes junto.</p></li>
+</ul><h2>
+<a name="21---editar-o-arquivo-applicationconfigxml" class="anchor" href="#21---editar-o-arquivo-applicationconfigxml"><span class="octicon octicon-link"></span></a>2.1 - Editar o arquivo applicationConfig.xml</h2>
+
+<p>Editar o arquivo <i>applicationConfig.xml</i> em (<i>path/jboss-7.1.1.Final/standalone/deployments/geplanes_bsc.war/WEB-INF</i>)</p>
+
+<p>Adicione o seguinte trecho logo após o bean <i>"authenticationConfig"</i>:</p>
+
+<pre><code>&lt;bean id="dataSource"
+    class="br.com.linkcom.sgm.util.JndiGeplanesFactory"&gt;
+&lt;/bean&gt;
+</code></pre>
+
+<h2>
+<a name="22---editar-o-arquivo-standalonexml" class="anchor" href="#22---editar-o-arquivo-standalonexml"><span class="octicon octicon-link"></span></a>2.2 - Editar o arquivo standalone.xml</h2>
+
+<p>Editar o arquivo <i>standalone.xml</i> em (<i>path/jboss-7.1.1.Final/standalone/configuration</i>)</p>
+
+<p>Adicione os trechos dentro da tag <i></i>. Essa configuração substitui a configuração do banco de dados definida no arquivo <i>geplanes_bsc_geplanes-ds.xml</i> utilizada para a versÃ£o 4.5 do JBoss.</p>
+
+<p>No exemplo abaixo o ip do servidor do banco de dados é o 10.0.1.6.</p>
+
+<pre><code>&lt;datasources&gt;
+    &lt;datasource jta="false" jndi-name="java:/10.0.1.6_geplanes_bsc_PostgreSQLDS" pool-name="postgresDS05" enabled="true" use-java-context="true" use-ccm="false"&gt;
+      &lt;connection-url&gt;jdbc:postgresql://localhost:5432/geplanes_bsc&lt;/connection-url&gt;
+      &lt;driver-class&gt;org.postgresql.Driver&lt;/driver-class&gt;
+      &lt;driver&gt;postgresql&lt;/driver&gt;
+      &lt;pool&gt;
+        &lt;min-pool-size&gt;2&lt;/min-pool-size&gt;
+        &lt;max-pool-size&gt;20&lt;/max-pool-size&gt;
+      &lt;/pool&gt;
+      &lt;security&gt;
+        &lt;user-name&gt;postgres&lt;/user-name&gt;
+        &lt;password&gt;postgres&lt;/password&gt;
+      &lt;/security&gt;
+      &lt;validation&gt;
+        &lt;validate-on-match&gt;false&lt;/validate-on-match&gt;
+        &lt;background-validation&gt;false&lt;/background-validation&gt;
+        &lt;background-validation-millis&gt;1&lt;/background-validation-millis&gt;
+      &lt;/validation&gt;
+      &lt;statement&gt;
+        &lt;prepared-statement-cache-size&gt;0&lt;/prepared-statement-cache-size&gt;
+        &lt;share-prepared-statements&gt;false&lt;/share-prepared-statements&gt;
+      &lt;/statement&gt;
+    &lt;/datasource&gt;
+    &lt;datasource jta="false" jndi-name="java:/geplanes_bsc_PostgreSQLDS" pool-name="postgresDS01" enabled="true" use-java-context="true" use-ccm="false"&gt;
+      &lt;connection-url&gt;jdbc:postgresql://localhost:5432/geplanes_bsc&lt;/connection-url&gt;
+        &lt;driver-class&gt;org.postgresql.Driver&lt;/driver-class&gt;
+        &lt;driver&gt;postgresql&lt;/driver&gt;
+        &lt;pool&gt;
+          &lt;min-pool-size&gt;2&lt;/min-pool-size&gt;
+          &lt;max-pool-size&gt;20&lt;/max-pool-size&gt;
+        &lt;/pool&gt;
+        &lt;security&gt;
+          &lt;user-name&gt;postgres&lt;/user-name&gt;
+          &lt;password&gt;postgres&lt;/password&gt;
+        &lt;/security&gt;
+        &lt;validation&gt;
+          &lt;validate-on-match&gt;false&lt;/validate-on-match&gt;
+          &lt;background-validation&gt;false&lt;/background-validation&gt;
+          &lt;background-validation-millis&gt;1&lt;/background-validation-millis&gt;
+        &lt;/validation&gt;
+        &lt;statement&gt;
+          &lt;prepared-statement-cache-size&gt;0&lt;/prepared-statement-cache-size&gt;
+          &lt;share-prepared-statements&gt;false&lt;/share-prepared-statements&gt;
+        &lt;/statement&gt;
+    &lt;/datasource&gt;
+    &lt;datasource jta="false" jndi-name="java:/127.0.0.1_geplanes_bsc_PostgreSQLDS" pool-name="postgresDS02" enabled="true" use-java-context="true" use-ccm="false"&gt;
+      &lt;connection-url&gt;jdbc:postgresql://localhost:5432/geplanes_bsc&lt;/connection-url&gt;
+      &lt;driver-class&gt;org.postgresql.Driver&lt;/driver-class&gt;
+      &lt;driver&gt;postgresql&lt;/driver&gt;
+      &lt;pool&gt;
+        &lt;min-pool-size&gt;2&lt;/min-pool-size&gt;
+        &lt;max-pool-size&gt;20&lt;/max-pool-size&gt;
+      &lt;/pool&gt;
+      &lt;security&gt;
+        &lt;user-name&gt;postgres&lt;/user-name&gt;
+        &lt;password&gt;postgres&lt;/password&gt;
+      &lt;/security&gt;
+      &lt;validation&gt;
+        &lt;validate-on-match&gt;false&lt;/validate-on-match&gt;
+        &lt;background-validation&gt;false&lt;/background-validation&gt;
+        &lt;background-validation-millis&gt;1&lt;/background-validation-millis&gt;
+      &lt;/validation&gt;
+      &lt;statement&gt;
+        &lt;prepared-statement-cache-size&gt;0&lt;/prepared-statement-cache-size&gt;
+        &lt;share-prepared-statements&gt;false&lt;/share-prepared-statements&gt;
+      &lt;/statement&gt;
+    &lt;/datasource&gt;
+    &lt;datasource jta="false" jndi-name="java:/localhost_geplanes_bsc_PostgreSQLDS" pool-name="postgresDS" enabled="true" use-java-context="true" use-ccm="false"&gt;
+      &lt;connection-url&gt;jdbc:postgresql://localhost:5432/geplanes_bsc&lt;/connection-url&gt;
+      &lt;driver-class&gt;org.postgresql.Driver&lt;/driver-class&gt;
+      &lt;driver&gt;postgresql&lt;/driver&gt;
+      &lt;pool&gt;
+        &lt;min-pool-size&gt;2&lt;/min-pool-size&gt;
+        &lt;max-pool-size&gt;20&lt;/max-pool-size&gt;
+      &lt;/pool&gt;
+      &lt;security&gt;
+        &lt;user-name&gt;postgres&lt;/user-name&gt;
+        &lt;password&gt;postgres&lt;/password&gt;
+      &lt;/security&gt;
+      &lt;validation&gt;
+        &lt;validate-on-match&gt;false&lt;/validate-on-match&gt;
+        &lt;background-validation&gt;false&lt;/background-validation&gt;
+        &lt;background-validation-millis&gt;1&lt;/background-validation-millis&gt;
+      &lt;/validation&gt;
+      &lt;statement&gt;
+        &lt;prepared-statement-cache-size&gt;0&lt;/prepared-statement-cache-size&gt;
+        &lt;share-prepared-statements&gt;false&lt;/share-prepared-statements&gt;
+      &lt;/statement&gt;
+    &lt;/datasource&gt;
+    &lt;datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true"&gt;
+        &lt;connection-url&gt;jdbc:h2:mem:test;DB_CLOSE_DELAY=-1&lt;/connection-url&gt;
+        &lt;driver&gt;h2&lt;/driver&gt;
+        &lt;security&gt;
+          &lt;user-name&gt;sa&lt;/user-name&gt;
+          &lt;password&gt;sa&lt;/password&gt;
+        &lt;/security&gt;
+    &lt;/datasource&gt;
+        &lt;drivers&gt;
+          &lt;driver name="h2" module="com.h2database.h2"&gt;
+            &lt;xa-datasource-class&gt;org.h2.jdbcx.JdbcDataSource&lt;/xa-datasource-class&gt;
+          &lt;/driver&gt;
+          &lt;driver name="postgresql" module="org.postgresql"&gt;
+            &lt;xa-datasource-class&gt;org.postgresql.xa.PGXADataSource&lt;/xa-datasource-class&gt;
+          &lt;/driver&gt;
+        &lt;/drivers&gt;
+  &lt;/datasources&gt;
+</code></pre>
+
+<h2>
+<a name="23---criar-o-arquivo-geplanes_bscwardodeploy" class="anchor" href="#23---criar-o-arquivo-geplanes_bscwardodeploy"><span class="octicon octicon-link"></span></a>2.3 - Criar o arquivo geplanes_bsc.war.dodeploy</h2>
+
+<p>Criar o arquivo <b>geplanes_bsc.war.dodeploy</b> no caminho <i>path/jboss-7.1.1.Final/standalone/deployments</i> com o seguinte conteúdo:</p>
+
+<pre><code>geplanes_bsc.war
+</code></pre>
+
+<h2>
+<a name="24---copiar-o-driver-do-postgresql-postgresql-92-1002jdbc4jar" class="anchor" href="#24---copiar-o-driver-do-postgresql-postgresql-92-1002jdbc4jar"><span class="octicon octicon-link"></span></a>2.4 - Copiar o driver do postgresql postgresql-9.2-1002.jdbc4.jar</h2>
+
+<p>Copiar o driver do postgresql (<i>postgresql-9.2-1002.jdbc4.jar</i>) dentro da pasta <i>path/jboss-7.1.1.Final/modules/org/postgresql/main</i></p>
+
+<h2>
+<a name="25---criar-um-script-para-facilitar-a-inicializa%C3%A7%C3%A3o-do-jboss" class="anchor" href="#25---criar-um-script-para-facilitar-a-inicializa%C3%A7%C3%A3o-do-jboss"><span class="octicon octicon-link"></span></a>2.5 - Criar um script para facilitar a inicialização do jBoss.</h2>
+
+<p>Criar o arquivo com o nome jboss7 na pasta <i>/etc/init.d</i></p>
+
+<pre><code> # sudo nano /etc/init.d/jboss7
+</code></pre>
+
+<p>Colar o conteúdo:</p>
+
+<pre><code> #!/bin/bash
+ #Define JBOSS_HOME
+ JBOSS_HOME=/path/jboss-7.1.1.Final
+
+ case "$1" in
+ start)
+ echo "Subindo JBoss AS7..."
+ sh ${JBOSS_HOME}/bin/standalone.sh &amp; &gt; /dev/null
+
+ ;;
+ stop)
+ echo "parando JBoss AS7..."
+ sh ${JBOSS_HOME}/bin/jboss-cli.sh --connect command=:shutdown
+ ;;
+ log)
+ echo "log server.log..."
+  tail -1000f ${JBOSS_HOME}/standalone/log/server.log
+ ;;
+ *)
+ echo "Use: /etc/init.d/jboss7 {start|stop|log}"
+ exit 1
+ ;; esac
+ exit 0
+</code></pre>
+
+<p>E agorar dar permissÃ£o de execução ao arquivo:</p>
+
+<pre><code># sudo chmod +x /etc/init.d/jboss7
+</code></pre>
+
+<p>Para iniciar o serviço:</p>
+
+<pre><code># sudo /etc/init.d/jboss7 start
+</code></pre>
+
+<p>E para parar o serviço:</p>
+
+<pre><code># sudo /etc/init.d/jboss7 stop
+</code></pre>
+
+<p>}</p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/admin-softwarepublicobrasileiro">admin-softwarepublicobrasileiro</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
